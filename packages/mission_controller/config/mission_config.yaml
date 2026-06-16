@@ -1,0 +1,57 @@
+# =============================================================================
+# mission_controller — Configuracion central
+# =============================================================================
+# Todos los parametros ajustables del sistema se definen aqui.
+# Se carga via <rosparam> en el launch file con el namespace del vehiculo,
+# por lo que se accede con rospy.get_param('~<param>').
+#
+# COMO AJUSTAR EN COMPETENCIA:
+#   Editar este archivo antes de correr el contenedor, o usar:
+#   rosparam set /<veh>/mission_controller_node/<param> <valor>
+# =============================================================================
+
+# ─── Seguridad / bloqueos ────────────────────────────────────────────────────
+
+# Segundos de gracia antes de reactivar conduccion tras un bloqueo de seguridad
+# (evita que el robot arranque instantaneamente cuando el obstaculo desaparece)
+safety_reactivation_delay: 0.5
+
+# ─── Parada ante linea roja ───────────────────────────────────────────────────
+
+# Segundos que el robot espera detenido ante una linea roja antes de continuar
+stop_duration: 2.0
+
+# ─── Maniobras de interseccion ────────────────────────────────────────────────
+# Estos parametros se pasan al nodo lane_follow via el topico /conduccion/instruccion.
+# El mission_controller NO ejecuta las maniobras: solo autoriza al lane_follow a hacerlas.
+# El lane_follow tiene sus propias duraciones en patos_config.yaml.
+# Aqui solo definimos cuanto tiempo espera el MC antes de volver a DRIVING.
+maniobra_timeout: 8.0   # segundos maximos esperando que lane_follow complete la maniobra
+
+# ─── Acciones LED por estado ─────────────────────────────────────────────────
+# Patron LED que se activa al entrar a cada estado.
+# Deben coincidir con los nombres definidos en LED_protocol.yaml del led_emitter.
+led_patrones:
+  DRIVING:     "CAR_DRIVING"
+  STOPPING:    "OBSTACLE_STOPPED"
+  MANEUVERING: "CAR_DRIVING"
+  BLOCKED:     "OBSTACLE_ALERT"
+  QR_ACTION:   "LIGHT_OFF"
+  RETURN_HOME: "BLUE"
+  FINALIZADO:  "LIGHT_OFF"
+
+# ─── Acciones LED para instrucciones de maniobra ─────────────────────────────
+led_maniobras:
+  turning_right: "turning_right"
+  turning_left:  "turning_left"
+  move_straight: "move_straight"
+  stop:          "OBSTACLE_STOPPED"
+
+# ─── QR / Misiones ───────────────────────────────────────────────────────────
+
+# Segundos maximos que puede durar una accion de mision QR (encender/parpadear luces)
+# Si se supera este tiempo, se fuerza el estado DRIVING como proteccion.
+qr_action_max_duration: 30.0
+
+# ─── Debug ───────────────────────────────────────────────────────────────────
+debug_log: true   # Si true, imprime transiciones de estado en cada cambio
