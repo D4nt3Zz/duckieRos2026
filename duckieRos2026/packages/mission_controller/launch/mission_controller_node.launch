@@ -1,0 +1,52 @@
+<launch>
+    <!-- =========================================================
+         mission_controller_node.launch
+         Orquestador central del sistema Duckie Day 2026.
+
+         USO:
+           roslaunch mission_controller mission_controller_node.launch veh:=miguelito
+
+         El argumento veh se toma automaticamente de la variable de
+         entorno VEHICLE_NAME si no se pasa explicitamente.
+         ========================================================= -->
+
+    <arg name="veh" doc="Nombre del robot (VEHICLE_NAME)" default="myduckiebot02"/>
+
+    <group ns="$(arg veh)">
+ 
+        <!-- Cargar parametros de configuracion en el namespace del nodo -->
+        <rosparam
+            file="$(find mission_controller)/config/mission_config.yaml"
+            command="load"
+            ns="mission_controller_node"
+        />
+
+        <!-- Lanzar el nodo orquestador -->
+        <node
+            name="mission_controller_node"
+            pkg="mission_controller"
+            type="mission_controller_node.py"
+            output="screen"
+            required="true"
+        >
+            <!-- Pasar el nombre del vehiculo como parametro privado -->
+            <param name="veh" value="$(arg veh)"/>
+        </node>
+
+    </group>
+
+    <!-- =========================================================
+         AÑADIDO: Lanzar los otros nodos del sistema
+         ========================================================= -->
+
+    <!-- Nodo de Seguimiento de Carril (Lane Follow) -->
+    <include file="$(find lane_follow)/launch/lane_follow_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+    <!-- Nodo de Control de Luces (LED Emitter) -->
+    <include file="$(find led_emitter)/launch/led_emitter_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+</launch>

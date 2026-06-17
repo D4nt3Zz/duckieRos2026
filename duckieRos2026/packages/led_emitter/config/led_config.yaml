@@ -1,0 +1,52 @@
+# Configuración del nodo led_emitter para Duckiebot DB21J
+
+led_patterns:
+  # Patrón de inicialización
+  initialization:
+    duration: 2.0
+    pattern: blink_white
+    frequency: 2.0
+
+  # Patrón de conducción normal
+  driving:
+    duration: -1
+    pattern: solid_white
+    frequency: 0.0
+
+  # Patrón de giro
+  turning:
+    duration: 5.0
+    pattern: blink_yellow
+    frequency: 1.0
+
+  # Patrón de error
+  error:
+    duration: -1
+    pattern: blink_red
+    frequency: 2.0
+
+  # Patrón de parado
+  stopped:
+    duration: -1
+    pattern: solid_red
+    frequency: 0.0
+
+# Colores disponibles
+colors:
+  white: [255, 255, 255]
+  yellow: [255, 255, 0]
+  red: [255, 0, 0]
+  green: [0, 255, 0]
+  blue: [0, 0, 255]
+  off: [0, 0, 0]
+
+# Parámetros de hardware
+hardware:
+  # Número de LEDs
+  num_leds: 2
+  
+  # Pin GPIO para control
+  gpio_pin: 17
+  
+  # Frecuencia PWM
+  pwm_frequency: 1000

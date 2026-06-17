@@ -1,0 +1,38 @@
+<launch>
+    <!-- =========================================================
+         led_emitter_node.launch
+         Controlador de LEDs para Duckiebot DB21J.
+
+         USO:
+           roslaunch led_emitter led_emitter_node.launch veh:=miguelito
+
+         El argumento veh se toma automaticamente de la variable de
+         entorno VEHICLE_NAME si no se pasa explicitamente.
+         ========================================================= -->
+
+    <arg name="veh" doc="Nombre del robot (VEHICLE_NAME)" default="$(env VEHICLE_NAME)"/>
+
+    <group ns="$(arg veh)">
+
+        <!-- Cargar parámetros de configuración -->
+        <rosparam
+            file="$(find led_emitter)/config/led_config.yaml"
+            command="load"
+            ns="led_emitter_node"
+        />
+
+        <!-- Lanzar el nodo controlador de LEDs -->
+        <node
+            name="led_emitter_node"
+            pkg="led_emitter"
+            type="led_emitter_node.py"
+            output="screen"
+            required="true"
+        >
+            <!-- Pasar el nombre del vehículo como parámetro privado -->
+            <param name="veh" value="$(arg veh)"/>
+        </node>
+
+    </group>
+
+</launch>

@@ -1,0 +1,47 @@
+<launch>
+    <!-- =========================================================
+         lane_follow_node.launch
+         Nodo de seguimiento de carril para Duckiebot DB21J.
+         
+         Procesa imágenes de cámara para detectar carriles y publica
+         comandos de movimiento para mantener el robot en el carril.
+
+         USO:
+           roslaunch lane_follow lane_follow_node.launch veh:=miguelito
+
+         El argumento veh se toma automaticamente de la variable de
+         entorno VEHICLE_NAME si no se pasa explicitamente.
+         ========================================================= -->
+
+    <arg name="veh" doc="Nombre del robot (VEHICLE_NAME)" default="$(env VEHICLE_NAME)"/>
+
+    <group ns="$(arg veh)">
+
+        <!-- Cargar parámetros de configuración en el namespace del nodo -->
+        <rosparam
+            file="$(find lane_follow)/config/lane_follow_config.yaml"
+            command="load"
+            ns="lane_follow_node"
+        />
+
+        <!-- Lanzar el nodo de seguimiento de carril -->
+        <node
+            name="lane_follow_node"
+            pkg="lane_follow"
+            type="lane_follow_node.py"
+            output="screen"
+            required="true"
+        >
+            <!-- Pasar el nombre del vehículo como parámetro privado -->
+            <param name="veh" value="$(arg veh)"/>
+            
+            <!-- Remapeo de tópicos -->
+            <remap from="camera_image" to="camera_node/image/compressed"/>
+            <remap from="wheel_commands" to="wheels_driver_node/wheels_cmd"/>
+            <remap from="maniobra_completada" to="/$(arg veh)/conduccion/maniobra_completada"/>
+            <remap from="evento" to="/$(arg veh)/conduccion/evento"/>
+        </node>
+
+    </group>
+
+</launch>

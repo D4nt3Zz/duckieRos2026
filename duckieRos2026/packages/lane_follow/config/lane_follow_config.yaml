@@ -1,0 +1,91 @@
+# Configuración del nodo lane_follow para Duckiebot DB21J
+
+# ============================================================
+# Parámetros de detección de carriles
+# ============================================================
+
+# Rango de colores para detectar líneas blancas (HSV)
+lane_detection:
+  # Línea blanca (izquierda)
+  white_lower_h: 0
+  white_lower_s: 0
+  white_lower_v: 200
+  white_upper_h: 180
+  white_upper_s: 30
+  white_upper_v: 255
+
+  # Línea amarilla (derecha)
+  yellow_lower_h: 20
+  yellow_lower_s: 100
+  yellow_lower_v: 100
+  yellow_upper_h: 40
+  yellow_upper_s: 255
+  yellow_upper_v: 255
+
+# ============================================================
+# Parámetros de control PID
+# ============================================================
+
+pid_control:
+  # Ganancia proporcional
+  kp: 1.5
+  
+  # Ganancia integral
+  ki: 0.1
+  
+  # Ganancia derivativa
+  kd: 0.5
+  
+  # Error máximo para el integral
+  integral_max: 1.0
+  integral_min: -1.0
+
+# ============================================================
+# Parámetros de velocidad
+# ============================================================
+
+velocity:
+  # Velocidad lineal máxima (m/s)
+  max_linear_velocity: 0.3
+  
+  # Velocidad angular máxima (rad/s)
+  max_angular_velocity: 1.5
+  
+  # Velocidad lineal mínima
+  min_linear_velocity: 0.05
+
+# ============================================================
+# Parámetros de procesamiento de imagen
+# ============================================================
+
+image_processing:
+  # Área de interés (ROI) - solo procesar parte inferior de la imagen
+  roi_top_fraction: 0.5      # Empezar desde el 50% de la imagen
+  roi_height_fraction: 0.5   # Usar el 50% inferior
+  
+  # Desenfoque Gaussiano
+  blur_kernel: 5
+  
+  # Erosión y dilatación
+  morph_kernel_size: 5
+  morph_iterations: 1
+
+# ============================================================
+# Parámetros de comportamiento del nodo
+# ============================================================
+
+behavior:
+  # Frecuencia de procesamiento (Hz)
+  processing_rate: 30
+  
+  # Timeout de la imagen (segundos)
+  image_timeout: 1.0
+  
+  # Tolerancia de desviación (píxeles)
+  deviation_threshold: 20
+  
+  # Modo de depuración (publica imágenes procesadas)
+  debug_mode: false
+  
+  # Publicar información de seguimiento
+  publish_diagnostics: true
